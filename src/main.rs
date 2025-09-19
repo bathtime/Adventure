@@ -1,7 +1,7 @@
 // git add .; git commit -m "Save work before switching branches"; git checkout main
 // macroquad = "0.4"
 
-use macroquad::prelude::*;
+use macroquad::{miniquad::ElapsedQuery, prelude::*};
 
 const PLAYER_WIDTH: f32 = 35.0;
 const PLAYER_HEIGHT: f32 = 50.0;
@@ -196,14 +196,24 @@ impl Player {
         if is_key_down(KeyCode::D) || is_key_down(KeyCode::Right) {
             input += 1.0;
         }
-        let move_speed = BASE_MOVE_SPEED + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
+
+
+
+        let mut boost = 1.0;
+        if is_key_down(KeyCode::LeftShift) {
+            boost = 1.5;
+        }
+
+        let move_speed = BASE_MOVE_SPEED * boost + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
+        
+        
+        
         self.vel.x = input * move_speed;
         if input != 0.0 {
             self.facing_right = input > 0.0;
         }
         let jump_speed = if self.high_jump_timer > 0.0 { HIGH_JUMP_SPEED } else { JUMP_SPEED }; // NEW
         if self.on_ground
-            //&& (is_key_pressed(KeyCode::W) || is_key_pressed(KeyCode::Space))
             && (is_key_pressed(KeyCode::LeftControl) || is_key_pressed(KeyCode::RightAlt))
         {
             self.vel.y = -jump_speed;
@@ -454,7 +464,7 @@ async fn main() {
         let camera_x = player.pos.x - screen_width() / 2.0 + PLAYER_WIDTH / 2.0;
 
         shoot_cooldown -= dt;
-        if player.alive && !game_won && (is_key_pressed(KeyCode::RightControl) || is_key_pressed(KeyCode::LeftAlt)) && shoot_cooldown <= 0.0 {
+        if player.alive && !game_won && (is_key_pressed(KeyCode::LeftAlt) ||is_key_pressed(KeyCode::RightControl) ) && shoot_cooldown <= 0.0 {
             
             // TODO: fire diagonally in all four directions
             let dir = if player.facing_right { 1.0 } else { -1.0 };
@@ -494,7 +504,6 @@ async fn main() {
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0  + dir * 18.0,
-                        //player.pos.x + PLAYER_WIDTH / 2.0 + dir * 18.0,
                         player.pos.y + PLAYER_HEIGHT / 2.0,
                     ),
                     vel: vec2(dir * BULLET_SPEED, BULLET_SPEED),
@@ -513,8 +522,7 @@ async fn main() {
                     alive: true,
                 });
 
-            } else if { is_key_down(KeyCode::Left) || is_key_down(KeyCode::Right) }
-                && ! is_key_down(KeyCode::Up) {
+            } else if ! is_key_down(KeyCode::Up) {
                  
                 bullets.push(Bullet {
                     pos: vec2(
