@@ -204,7 +204,7 @@ impl Player {
         }
 
 
-        if is_key_down(KeyCode::LeftShift) {
+        if is_key_down(KeyCode::LeftControl) {
             self.is_running = true;
         } else {
             self.is_running = false;
@@ -221,7 +221,7 @@ impl Player {
         }
         let jump_speed = if self.high_jump_timer > 0.0 { HIGH_JUMP_SPEED } else { JUMP_SPEED }; // NEW
         if self.on_ground
-            && (is_key_pressed(KeyCode::LeftControl) || is_key_pressed(KeyCode::RightAlt))
+            && (is_key_pressed(KeyCode::LeftAlt) || is_key_pressed(KeyCode::RightAlt))
         {
             self.vel.y = -jump_speed;
             self.on_ground = false;
@@ -235,6 +235,7 @@ impl Player {
         if self.high_jump_timer > 0.0 {
             self.high_jump_timer -= dt / TIMER_BOOST;
         }
+
         self.vel.y += GRAVITY * dt;
         let mut new_pos = self.pos + self.vel * dt;
         let player_rect = Rect::new(new_pos.x, new_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT);
@@ -473,12 +474,17 @@ async fn main() {
 
         let camera_x = player.pos.x - screen_width() / 2.0 + PLAYER_WIDTH / 2.0;
 
+
+
+
+        if is_key_down(KeyCode::Space) {
+            
+        }
+
         shoot_cooldown -= dt;
-        if player.alive && !game_won && (is_key_pressed(KeyCode::LeftAlt) ||is_key_pressed(KeyCode::RightControl) ) && shoot_cooldown <= 0.0 {
+        if player.alive && !game_won && (is_key_pressed(KeyCode::LeftControl) ||is_key_pressed(KeyCode::RightControl) ) && shoot_cooldown <= 0.0 {
             
             let dir = if player.facing_right { 1.0 } else { -1.0 };
-
-
 
             if is_key_down(KeyCode::Up)
                 && { is_key_down(KeyCode::Left)
@@ -702,9 +708,12 @@ async fn main() {
         draw_text(&health_str, 10.0, 30.0, 30.0, RED);
         let score_str = format!("Score: {}", player.score);
         draw_text(&score_str, 10.0, 65.0, 30.0, BLACK);
-        //draw_text("A/D or ←/→ to move, W/↑/Space to jump, J/Z to shoot", 10.0, 100.0, 24.0, BLACK);
-        draw_text("Arrow keys to move, shift to run, Ctrl to jump, Alt to shoot", 10.0, 100.0, 24.0, BLACK);
+        draw_text("Arrow = move, Ctrl = run/shoot, Alt = jump", 10.0, 100.0, 24.0, BLACK);
+        
+        let position = format!("player.pos: {:?} camera_x: {:?}", player.pos, camera_x);
+        draw_text(position.as_str(), 400.0, 20.0, 24.0, BLACK);
 
+        
         if player.speed_timer > 0.0 {
             draw_text("SPEED!", 10.0, 130.0, 28.0, ORANGE);
         }
