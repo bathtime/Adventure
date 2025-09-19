@@ -1,7 +1,8 @@
 // git add .; git commit -m "Save work before switching branches"; git checkout main
 // macroquad = "0.4"
 
-use macroquad::{miniquad::ElapsedQuery, prelude::*};
+//use macroquad::{miniquad::ElapsedQuery, prelude::*};
+use macroquad::{miniquad::*, prelude::*};
 
 const PLAYER_WIDTH: f32 = 35.0;
 const PLAYER_HEIGHT: f32 = 50.0;
@@ -182,7 +183,7 @@ struct Player {
     invincible_timer: f32,
     high_jump_timer: f32, // NEW
     prev_y: f32, // NEW, for jump-on detection
-    //running: f32,
+    is_running: bool,
 }
 
 impl Player {
@@ -200,18 +201,14 @@ impl Player {
         }
 
 
-        let mut running = false;
-
         if is_key_down(KeyCode::LeftShift) {
-            running = true;
+            self.is_running = true;
         } else {
-            running = false;
+            self.is_running = false;
         }
 
-
         //let move_speed = BASE_MOVE_SPEED * boost + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
-//        let move_speed = if running { RUNNING_SPEED } else { BASE_MOVE_SPEED } + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
-        let move_speed = if running { RUNNING_SPEED } else { BASE_MOVE_SPEED } + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
+        let move_speed = if self.is_running { RUNNING_SPEED } else { BASE_MOVE_SPEED } + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
         
         
         
@@ -336,6 +333,7 @@ fn make_levels() -> Vec<Level> {
             powerups: vec![
                 PowerUp { pos: vec2(935.0, 325.0), kind: PowerUpType::Speed, collected: false },
                 PowerUp { pos: vec2(700.0, 235.0), kind: PowerUpType::HighJump, collected: false }, // NEW
+                PowerUp { pos: vec2(200.0, 235.0), kind: PowerUpType::Health, collected: false }, // NEW
             ],
             start: vec2(100.0, 100.0),
             goal_x: 1050.0,
@@ -431,7 +429,8 @@ fn make_levels() -> Vec<Level> {
 
 #[macroquad::main("Adventure Game: Powerups & Levels")]
 async fn main() {
-    let mut levels = make_levels();
+//    let mut levels = make_levels();
+    let levels = make_levels();
     let mut current_level = 0;
 
     let mut player = Player {
@@ -446,6 +445,7 @@ async fn main() {
         invincible_timer: 0.0,
         high_jump_timer: 0.0,
         prev_y: levels[0].start.y,
+        is_running: false,
     };
 
     let mut enemies = levels[0].enemies.clone();
@@ -668,6 +668,7 @@ async fn main() {
                     invincible_timer: 0.0,
                     high_jump_timer: 0.0,
                     prev_y: levels[0].start.y,
+                    is_running: false,
                 };
                 enemies = levels[0].enemies.clone();
                 bonuses = levels[0].bonuses.clone();
@@ -727,6 +728,7 @@ async fn main() {
                     invincible_timer: 0.0,
                     high_jump_timer: 0.0,
                     prev_y: levels[current_level].start.y,
+                    is_running: false,
                 };
                 enemies = levels[current_level].enemies.clone();
                 bonuses = levels[current_level].bonuses.clone();
