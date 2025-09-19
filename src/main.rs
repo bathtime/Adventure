@@ -433,8 +433,10 @@ fn make_levels() -> Vec<Level> {
 
 #[macroquad::main("Adventure Game: Powerups & Levels")]
 async fn main() {
-//    let mut levels = make_levels();
+
+    //    let mut levels = make_levels();
     let levels = make_levels();
+
     let mut current_level = 0;
 
     let mut player = Player {
@@ -451,6 +453,7 @@ async fn main() {
         prev_y: levels[0].start.y,
         is_running: false,
     };
+
 
     let mut enemies = levels[0].enemies.clone();
     let mut bonuses = levels[0].bonuses.clone();
