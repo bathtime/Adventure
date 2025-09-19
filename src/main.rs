@@ -6,6 +6,7 @@ use macroquad::{miniquad::ElapsedQuery, prelude::*};
 const PLAYER_WIDTH: f32 = 35.0;
 const PLAYER_HEIGHT: f32 = 50.0;
 const BASE_MOVE_SPEED: f32 = 200.0;
+const RUNNING_SPEED: f32 = 300.0;
 const SPEED_BOOST: f32 = 120.0;
 const GRAVITY: f32 = 800.0;
 const JUMP_SPEED: f32 = 400.0;
@@ -181,6 +182,7 @@ struct Player {
     invincible_timer: f32,
     high_jump_timer: f32, // NEW
     prev_y: f32, // NEW, for jump-on detection
+    //running: f32,
 }
 
 impl Player {
@@ -198,13 +200,18 @@ impl Player {
         }
 
 
+        let mut running = false;
 
-        let mut boost = 1.0;
         if is_key_down(KeyCode::LeftShift) {
-            boost = 1.5;
+            running = true;
+        } else {
+            running = false;
         }
 
-        let move_speed = BASE_MOVE_SPEED * boost + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
+
+        //let move_speed = BASE_MOVE_SPEED * boost + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
+//        let move_speed = if running { RUNNING_SPEED } else { BASE_MOVE_SPEED } + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
+        let move_speed = if running { RUNNING_SPEED } else { BASE_MOVE_SPEED } + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
         
         
         
