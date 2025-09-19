@@ -203,9 +203,8 @@ impl Player {
         }
         let jump_speed = if self.high_jump_timer > 0.0 { HIGH_JUMP_SPEED } else { JUMP_SPEED }; // NEW
         if self.on_ground
-            && (is_key_pressed(KeyCode::W)
-                || is_key_pressed(KeyCode::Up)
-                || is_key_pressed(KeyCode::Space))
+            //&& (is_key_pressed(KeyCode::W) || is_key_pressed(KeyCode::Space))
+            && (is_key_pressed(KeyCode::LeftControl) || is_key_pressed(KeyCode::RightAlt))
         {
             self.vel.y = -jump_speed;
             self.on_ground = false;
@@ -455,9 +454,10 @@ async fn main() {
         let camera_x = player.pos.x - screen_width() / 2.0 + PLAYER_WIDTH / 2.0;
 
         shoot_cooldown -= dt;
-        if player.alive && !game_won && (is_key_pressed(KeyCode::J) || is_key_pressed(KeyCode::Z)) && shoot_cooldown <= 0.0 {
-            let up = is_key_down(KeyCode::W) || is_key_down(KeyCode::Up);
-            if up {
+        if player.alive && !game_won && (is_key_pressed(KeyCode::RightControl) || is_key_pressed(KeyCode::LeftAlt)) && shoot_cooldown <= 0.0 {
+            //let up = is_key_down(KeyCode::W) || is_key_down(KeyCode::Up);
+            //if up {
+            if is_key_down(KeyCode::Up) || is_key_down(KeyCode::W) {
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0,
@@ -466,6 +466,19 @@ async fn main() {
                     vel: vec2(0.0, -BULLET_SPEED),
                     alive: true,
                 });
+            
+            // edited
+            } else if is_key_down(KeyCode::Down) ||is_key_down(KeyCode::S)  {
+                
+                bullets.push(Bullet {
+                    pos: vec2(
+                        player.pos.x + PLAYER_WIDTH / 2.0,
+                        player.pos.y,
+                    ),
+                    vel: vec2(0.0, BULLET_SPEED),
+                    alive: true,
+                });
+
             } else {
                 let dir = if player.facing_right { 1.0 } else { -1.0 };
                 bullets.push(Bullet {
@@ -477,7 +490,7 @@ async fn main() {
                     alive: true,
                 });
             }
-            shoot_cooldown = 0.2;
+            shoot_cooldown = 0.002;      // edited
         }
 
         for bullet in &mut bullets {
