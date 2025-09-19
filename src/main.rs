@@ -4,6 +4,7 @@
 //use macroquad::{miniquad::ElapsedQuery, prelude::*};
 use macroquad::{miniquad::*, prelude::*};
 
+const GAME_SPEED: f32 = 1.0;
 const PLAYER_WIDTH: f32 = 30.0;
 const PLAYER_HEIGHT: f32 = 50.0;
 const BASE_MOVE_SPEED: f32 = 200.0;
@@ -20,6 +21,7 @@ const ENEMY_SPEED: f32 = 60.0;
 const BONUS_SIZE: f32 = 20.0;
 const POWERUP_SIZE: f32 = 20.0;
 const MAX_HEALTH: i32 = 3;
+const TIMER_BOOST: f32 = 3.0;
 
 #[derive(Clone, Copy)]
 enum PowerUpType {
@@ -225,13 +227,13 @@ impl Player {
             self.on_ground = false;
         }
         if self.speed_timer > 0.0 {
-            self.speed_timer -= dt;
+            self.speed_timer -= dt / TIMER_BOOST;
         }
         if self.invincible_timer > 0.0 {
-            self.invincible_timer -= dt;
+            self.invincible_timer -= dt / TIMER_BOOST;
         }
         if self.high_jump_timer > 0.0 {
-            self.high_jump_timer -= dt;
+            self.high_jump_timer -= dt / TIMER_BOOST;
         }
         self.vel.y += GRAVITY * dt;
         let mut new_pos = self.pos + self.vel * dt;
@@ -458,7 +460,7 @@ async fn main() {
     let mut game_won = false;
 
     loop {
-        let dt = get_frame_time();
+        let dt = get_frame_time() * GAME_SPEED;
         let platforms: &[Rect] = if current_level < levels.len() {
             &levels[current_level].platforms
         } else {
@@ -700,7 +702,8 @@ async fn main() {
         draw_text(&health_str, 10.0, 30.0, 30.0, RED);
         let score_str = format!("Score: {}", player.score);
         draw_text(&score_str, 10.0, 65.0, 30.0, BLACK);
-        draw_text("A/D or ←/→ to move, W/↑/Space to jump, J/Z to shoot", 10.0, 100.0, 24.0, BLACK);
+        //draw_text("A/D or ←/→ to move, W/↑/Space to jump, J/Z to shoot", 10.0, 100.0, 24.0, BLACK);
+        draw_text("Arrow keys to move, shift to run, Ctrl to jump, Alt to shoot", 10.0, 100.0, 24.0, BLACK);
 
         if player.speed_timer > 0.0 {
             draw_text("SPEED!", 10.0, 130.0, 28.0, ORANGE);
