@@ -194,6 +194,9 @@ impl Player {
         if !self.alive {
             return;
         }
+
+        
+
         self.prev_y = self.pos.y; // NEW
         let mut input = 0.0;
         if is_key_down(KeyCode::A) || is_key_down(KeyCode::Left) {
@@ -478,10 +481,12 @@ async fn main() {
         let camera_x = player.pos.x - screen_width() / 2.0 + PLAYER_WIDTH / 2.0;
 
 
-
+        if is_key_down(KeyCode::Escape) {
+            return;
+        }
 
         if is_key_down(KeyCode::Space) {
-            
+            // TODO    
         }
 
         shoot_cooldown -= dt;
@@ -711,7 +716,7 @@ async fn main() {
         draw_text(&health_str, 10.0, 30.0, 30.0, RED);
         let score_str = format!("Score: {}", player.score);
         draw_text(&score_str, 10.0, 65.0, 30.0, BLACK);
-        draw_text("Arrow = move, Ctrl = run/shoot, Alt = jump", 10.0, 100.0, 24.0, BLACK);
+        draw_text("Arrow = move, Ctrl = run/shoot, Alt = jump, Esc = quit", 10.0, 100.0, 24.0, BLACK);
         
         let position = format!("player.pos: {:?} camera_x: {:?}", player.pos, camera_x);
         draw_text(position.as_str(), 400.0, 20.0, 24.0, BLACK);
