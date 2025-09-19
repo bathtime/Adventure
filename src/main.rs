@@ -13,6 +13,7 @@ const GRAVITY: f32 = 800.0;
 const JUMP_SPEED: f32 = 400.0;
 const HIGH_JUMP_SPEED: f32 = 650.0; // NEW
 const BULLET_SPEED: f32 = 500.0;
+const KILL_BOUNCE: f32 = 0.9;   // How high will character go after bouncing on an enemy?
 const ENEMY_WIDTH: f32 = 28.0;
 const ENEMY_HEIGHT: f32 = 45.0;
 const ENEMY_SPEED: f32 = 60.0;
@@ -473,7 +474,6 @@ async fn main() {
         shoot_cooldown -= dt;
         if player.alive && !game_won && (is_key_pressed(KeyCode::LeftAlt) ||is_key_pressed(KeyCode::RightControl) ) && shoot_cooldown <= 0.0 {
             
-            // TODO: fire diagonally in all four directions
             let dir = if player.facing_right { 1.0 } else { -1.0 };
 
 
@@ -485,7 +485,6 @@ async fn main() {
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0,
-                        //player.pos.x + PLAYER_WIDTH / 2.0 + dir * 18.0,
                         player.pos.y + PLAYER_HEIGHT / 2.0,
                     ),
                     vel: vec2(dir * BULLET_SPEED, -BULLET_SPEED),
@@ -529,6 +528,7 @@ async fn main() {
                     alive: true,
                 });
 
+            // We're not moving right or left
             } else if ! is_key_down(KeyCode::Up) {
                  
                 bullets.push(Bullet {
@@ -577,7 +577,7 @@ async fn main() {
                 let player_was_above = player.prev_y + PLAYER_HEIGHT <= enemy.pos.y + 4.0; // fudge factor
                 if enemy.can_be_jumped_on && is_colliding && player.vel.y > 0.0 && player_was_above {
                     enemy.alive = false;
-                    player.vel.y = -JUMP_SPEED * 0.9; // bounce up
+                    player.vel.y = -JUMP_SPEED * KILL_BOUNCE; // bounce up
                     player.score += 150;
                     jumped_on_any = true;
                 }
