@@ -457,6 +457,11 @@ async fn main() {
         if player.alive && !game_won && (is_key_pressed(KeyCode::RightControl) || is_key_pressed(KeyCode::LeftAlt)) && shoot_cooldown <= 0.0 {
             //let up = is_key_down(KeyCode::W) || is_key_down(KeyCode::Up);
             //if up {
+
+
+            // TODO: fire diagonally in all four directions
+
+
             if is_key_down(KeyCode::Up) || is_key_down(KeyCode::W) {
                 bullets.push(Bullet {
                     pos: vec2(
