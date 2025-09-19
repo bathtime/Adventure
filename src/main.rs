@@ -4,7 +4,7 @@
 //use macroquad::{miniquad::ElapsedQuery, prelude::*};
 use macroquad::{miniquad::*, prelude::*};
 
-const PLAYER_WIDTH: f32 = 35.0;
+const PLAYER_WIDTH: f32 = 30.0;
 const PLAYER_HEIGHT: f32 = 50.0;
 const BASE_MOVE_SPEED: f32 = 200.0;
 const RUNNING_SPEED: f32 = 300.0;
