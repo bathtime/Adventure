@@ -455,14 +455,27 @@ async fn main() {
 
         shoot_cooldown -= dt;
         if player.alive && !game_won && (is_key_pressed(KeyCode::RightControl) || is_key_pressed(KeyCode::LeftAlt)) && shoot_cooldown <= 0.0 {
-            //let up = is_key_down(KeyCode::W) || is_key_down(KeyCode::Up);
-            //if up {
-
-
+            
             // TODO: fire diagonally in all four directions
+            let dir = if player.facing_right { 1.0 } else { -1.0 };
 
 
-            if is_key_down(KeyCode::Up) || is_key_down(KeyCode::W) {
+
+            if is_key_down(KeyCode::Up)
+                && { is_key_down(KeyCode::Left)
+                || is_key_down(KeyCode::Right) } {
+
+                bullets.push(Bullet {
+                    pos: vec2(
+                        player.pos.x + PLAYER_WIDTH / 2.0,
+                        //player.pos.x + PLAYER_WIDTH / 2.0 + dir * 18.0,
+                        player.pos.y + PLAYER_HEIGHT / 2.0,
+                    ),
+                    vel: vec2(dir * BULLET_SPEED, -BULLET_SPEED),
+                    alive: true,
+                });
+
+            } else if is_key_down(KeyCode::Up) || is_key_down(KeyCode::W) {
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0,
@@ -472,20 +485,37 @@ async fn main() {
                     alive: true,
                 });
             
-            // edited
-            } else if is_key_down(KeyCode::Down) ||is_key_down(KeyCode::S)  {
+            
+            } if is_key_down(KeyCode::Down)
+                && { is_key_down(KeyCode::Left) || is_key_down(KeyCode::Right) }
+            
+                {
+
+                bullets.push(Bullet {
+                    pos: vec2(
+                        player.pos.x + PLAYER_WIDTH / 2.0  + dir * 18.0,
+                        //player.pos.x + PLAYER_WIDTH / 2.0 + dir * 18.0,
+                        player.pos.y + PLAYER_HEIGHT / 2.0,
+                    ),
+                    vel: vec2(dir * BULLET_SPEED, BULLET_SPEED),
+                    alive: true,
+                });
+
+
+            } else if is_key_down(KeyCode::Down) || is_key_down(KeyCode::S)  {
                 
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0,
-                        player.pos.y,
+                        player.pos.y + PLAYER_HEIGHT,
                     ),
                     vel: vec2(0.0, BULLET_SPEED),
                     alive: true,
                 });
 
-            } else {
-                let dir = if player.facing_right { 1.0 } else { -1.0 };
+            } else if { is_key_down(KeyCode::Left) || is_key_down(KeyCode::Right) }
+                && ! is_key_down(KeyCode::Up) {
+                 
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0 + dir * 18.0,
@@ -495,7 +525,7 @@ async fn main() {
                     alive: true,
                 });
             }
-            shoot_cooldown = 0.002;      // edited
+            shoot_cooldown = 0.2;      // edited
         }
 
         for bullet in &mut bullets {
