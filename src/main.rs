@@ -1,11 +1,11 @@
-// git add .; git commit -m "Save work before switching branches"; git checkout main
+// git add .; git commit -m 'Updating'; git checkout main; git push
 // macroquad = "0.4"
 
 //use macroquad::{miniquad::ElapsedQuery, prelude::*};
 use macroquad::{miniquad::*, prelude::*};
 
 const GAME_SPEED: f32 = 1.0;
-const PLAYER_WIDTH: f32 = 30.0;
+const PLAYER_WIDTH: f32 = 60.0;
 const PLAYER_HEIGHT: f32 = 50.0;
 const BASE_MOVE_SPEED: f32 = 200.0;
 const RUNNING_SPEED: f32 = 300.0;
@@ -14,7 +14,7 @@ const GRAVITY: f32 = 800.0;
 const JUMP_SPEED: f32 = 400.0;
 const HIGH_JUMP_SPEED: f32 = 650.0; // NEW
 const BULLET_SPEED: f32 = 500.0;
-const KILL_BOUNCE: f32 = 0.9;   // How high will character go after bouncing on an enemy?
+const KILL_BOUNCE: f32 = 0.9; // How high will character go after bouncing on an enemy?
 const ENEMY_WIDTH: f32 = 28.0;
 const ENEMY_HEIGHT: f32 = 45.0;
 const ENEMY_SPEED: f32 = 60.0;
@@ -115,10 +115,31 @@ impl Enemy {
             draw_rectangle(x + ENEMY_WIDTH / 2.0 - 5.0, y + 22.0, 10.0, 14.0, RED);
             // Arms
             draw_line(x + ENEMY_WIDTH / 2.0, y + 24.0, x, y + 28.0, 2.0, RED);
-            draw_line(x + ENEMY_WIDTH / 2.0, y + 24.0, x + ENEMY_WIDTH, y + 28.0, 2.0, RED);
+            draw_line(
+                x + ENEMY_WIDTH / 2.0,
+                y + 24.0,
+                x + ENEMY_WIDTH,
+                y + 28.0,
+                2.0,
+                RED,
+            );
             // Legs
-            draw_line(x + ENEMY_WIDTH / 2.0, y + 36.0, x + 4.0, y + ENEMY_HEIGHT, 2.0, RED);
-            draw_line(x + ENEMY_WIDTH / 2.0, y + 36.0, x + ENEMY_WIDTH - 4.0, y + ENEMY_HEIGHT, 2.0, RED);
+            draw_line(
+                x + ENEMY_WIDTH / 2.0,
+                y + 36.0,
+                x + 4.0,
+                y + ENEMY_HEIGHT,
+                2.0,
+                RED,
+            );
+            draw_line(
+                x + ENEMY_WIDTH / 2.0,
+                y + 36.0,
+                x + ENEMY_WIDTH - 4.0,
+                y + ENEMY_HEIGHT,
+                2.0,
+                RED,
+            );
         }
     }
     fn rect(&self) -> Rect {
@@ -185,7 +206,7 @@ struct Player {
     speed_timer: f32,
     invincible_timer: f32,
     high_jump_timer: f32, // NEW
-    prev_y: f32, // NEW, for jump-on detection
+    prev_y: f32,          // NEW, for jump-on detection
     is_running: bool,
 }
 
@@ -194,8 +215,6 @@ impl Player {
         if !self.alive {
             return;
         }
-
-        
 
         self.prev_y = self.pos.y; // NEW
         let mut input = 0.0;
@@ -206,7 +225,6 @@ impl Player {
             input += 1.0;
         }
 
-
         if is_key_down(KeyCode::LeftControl) {
             self.is_running = true;
         } else {
@@ -214,17 +232,26 @@ impl Player {
         }
 
         //let move_speed = BASE_MOVE_SPEED * boost + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
-        let move_speed = if self.is_running { RUNNING_SPEED } else { BASE_MOVE_SPEED } + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
-        
-        
-        
+        let move_speed = if self.is_running {
+            RUNNING_SPEED
+        } else {
+            BASE_MOVE_SPEED
+        } + if self.speed_timer > 0.0 {
+            SPEED_BOOST
+        } else {
+            0.0
+        };
+
         self.vel.x = input * move_speed;
         if input != 0.0 {
             self.facing_right = input > 0.0;
         }
-        let jump_speed = if self.high_jump_timer > 0.0 { HIGH_JUMP_SPEED } else { JUMP_SPEED }; // NEW
-        if self.on_ground
-            && (is_key_pressed(KeyCode::LeftAlt) || is_key_pressed(KeyCode::RightAlt))
+        let jump_speed = if self.high_jump_timer > 0.0 {
+            HIGH_JUMP_SPEED
+        } else {
+            JUMP_SPEED
+        }; // NEW
+        if self.on_ground && (is_key_pressed(KeyCode::LeftAlt) || is_key_pressed(KeyCode::RightAlt))
         {
             self.vel.y = -jump_speed;
             self.on_ground = false;
@@ -274,13 +301,47 @@ impl Player {
         } else if self.high_jump_timer > 0.0 {
             body_color = BLUE;
         }
-        draw_rectangle(x + PLAYER_WIDTH / 2.0 - 5.0, y + 26.0, 10.0, 16.0, body_color);
+        draw_rectangle(
+            x + PLAYER_WIDTH / 2.0 - 5.0,
+            y + 26.0,
+            10.0,
+            16.0,
+            body_color,
+        );
         // Arms
-        draw_line(x + PLAYER_WIDTH / 2.0, y + 28.0, x, y + 35.0, 3.0, body_color);
-        draw_line(x + PLAYER_WIDTH / 2.0, y + 28.0, x + PLAYER_WIDTH, y + 35.0, 3.0, body_color);
+        draw_line(
+            x + PLAYER_WIDTH / 2.0,
+            y + 28.0,
+            x,
+            y + 35.0,
+            3.0,
+            body_color,
+        );
+        draw_line(
+            x + PLAYER_WIDTH / 2.0,
+            y + 28.0,
+            x + PLAYER_WIDTH,
+            y + 35.0,
+            3.0,
+            body_color,
+        );
         // Legs
-        draw_line(x + PLAYER_WIDTH / 2.0, y + 42.0, x + 5.0, y + PLAYER_HEIGHT, 3.0, body_color);
-        draw_line(x + PLAYER_WIDTH / 2.0, y + 42.0, x + PLAYER_WIDTH - 5.0, y + PLAYER_HEIGHT, 3.0, body_color);
+        draw_line(
+            x + PLAYER_WIDTH / 2.0,
+            y + 42.0,
+            x + 5.0,
+            y + PLAYER_HEIGHT,
+            3.0,
+            body_color,
+        );
+        draw_line(
+            x + PLAYER_WIDTH / 2.0,
+            y + 42.0,
+            x + PLAYER_WIDTH - 5.0,
+            y + PLAYER_HEIGHT,
+            3.0,
+            body_color,
+        );
     }
 
     fn rect(&self) -> Rect {
@@ -334,13 +395,31 @@ fn make_levels() -> Vec<Level> {
                 },
             ],
             bonuses: vec![
-                Bonus { pos: vec2(340.0, 295.0), collected: false },
-                Bonus { pos: vec2(650.0, 235.0), collected: false },
+                Bonus {
+                    pos: vec2(340.0, 295.0),
+                    collected: false,
+                },
+                Bonus {
+                    pos: vec2(650.0, 235.0),
+                    collected: false,
+                },
             ],
             powerups: vec![
-                PowerUp { pos: vec2(935.0, 325.0), kind: PowerUpType::Speed, collected: false },
-                PowerUp { pos: vec2(700.0, 235.0), kind: PowerUpType::HighJump, collected: false }, // NEW
-                PowerUp { pos: vec2(200.0, 235.0), kind: PowerUpType::Health, collected: false }, // NEW
+                PowerUp {
+                    pos: vec2(935.0, 325.0),
+                    kind: PowerUpType::Speed,
+                    collected: false,
+                },
+                PowerUp {
+                    pos: vec2(700.0, 235.0),
+                    kind: PowerUpType::HighJump,
+                    collected: false,
+                }, // NEW
+                PowerUp {
+                    pos: vec2(200.0, 235.0),
+                    kind: PowerUpType::Health,
+                    collected: false,
+                }, // NEW
             ],
             start: vec2(100.0, 100.0),
             goal_x: 1050.0,
@@ -383,12 +462,26 @@ fn make_levels() -> Vec<Level> {
                 },
             ],
             bonuses: vec![
-                Bonus { pos: vec2(650.0, 225.0), collected: false },
-                Bonus { pos: vec2(1250.0, 295.0), collected: false },
+                Bonus {
+                    pos: vec2(650.0, 225.0),
+                    collected: false,
+                },
+                Bonus {
+                    pos: vec2(1250.0, 295.0),
+                    collected: false,
+                },
             ],
             powerups: vec![
-                PowerUp { pos: vec2(1100.0, 175.0), kind: PowerUpType::Invincibility, collected: false },
-                PowerUp { pos: vec2(1300.0, 295.0), kind: PowerUpType::HighJump, collected: false }, // NEW
+                PowerUp {
+                    pos: vec2(1100.0, 175.0),
+                    kind: PowerUpType::Invincibility,
+                    collected: false,
+                },
+                PowerUp {
+                    pos: vec2(1300.0, 295.0),
+                    kind: PowerUpType::HighJump,
+                    collected: false,
+                }, // NEW
             ],
             start: vec2(100.0, 100.0),
             goal_x: 1450.0,
@@ -421,22 +514,35 @@ fn make_levels() -> Vec<Level> {
                 },
             ],
             bonuses: vec![
-                Bonus { pos: vec2(340.0, 295.0), collected: false },
-                Bonus { pos: vec2(650.0, 235.0), collected: false },
+                Bonus {
+                    pos: vec2(340.0, 295.0),
+                    collected: false,
+                },
+                Bonus {
+                    pos: vec2(650.0, 235.0),
+                    collected: false,
+                },
             ],
             powerups: vec![
-                PowerUp { pos: vec2(935.0, 325.0), kind: PowerUpType::Speed, collected: false },
-                PowerUp { pos: vec2(700.0, 235.0), kind: PowerUpType::HighJump, collected: false }, // NEW
+                PowerUp {
+                    pos: vec2(935.0, 325.0),
+                    kind: PowerUpType::Speed,
+                    collected: false,
+                },
+                PowerUp {
+                    pos: vec2(700.0, 235.0),
+                    kind: PowerUpType::HighJump,
+                    collected: false,
+                }, // NEW
             ],
             start: vec2(100.0, 100.0),
             goal_x: 1050.0,
-        }
+        },
     ]
 }
 
 #[macroquad::main("Adventure Game: Powerups & Levels")]
 async fn main() {
-
     //    let mut levels = make_levels();
     let levels = make_levels();
 
@@ -456,7 +562,6 @@ async fn main() {
         prev_y: levels[0].start.y,
         is_running: false,
     };
-
 
     let mut enemies = levels[0].enemies.clone();
     let mut bonuses = levels[0].bonuses.clone();
@@ -480,24 +585,25 @@ async fn main() {
 
         let camera_x = player.pos.x - screen_width() / 2.0 + PLAYER_WIDTH / 2.0;
 
-
         if is_key_down(KeyCode::Escape) {
             return;
         }
 
         if is_key_down(KeyCode::Space) {
-            // TODO    
+            // TODO
         }
 
         shoot_cooldown -= dt;
-        if player.alive && !game_won && (is_key_pressed(KeyCode::LeftControl) ||is_key_pressed(KeyCode::RightControl) ) && shoot_cooldown <= 0.0 {
-            
+        if player.alive
+            && !game_won
+            && (is_key_pressed(KeyCode::LeftControl) || is_key_pressed(KeyCode::RightControl))
+            && shoot_cooldown <= 0.0
+        {
             let dir = if player.facing_right { 1.0 } else { -1.0 };
 
-            if is_key_down(KeyCode::Up)
-                && { is_key_down(KeyCode::Left)
-                || is_key_down(KeyCode::Right) } {
-
+            if is_key_down(KeyCode::Up) && {
+                is_key_down(KeyCode::Left) || is_key_down(KeyCode::Right)
+            } {
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0,
@@ -506,35 +612,25 @@ async fn main() {
                     vel: vec2(dir * BULLET_SPEED, -BULLET_SPEED),
                     alive: true,
                 });
-
             } else if is_key_down(KeyCode::Up) || is_key_down(KeyCode::W) {
                 bullets.push(Bullet {
-                    pos: vec2(
-                        player.pos.x + PLAYER_WIDTH / 2.0,
-                        player.pos.y,
-                    ),
+                    pos: vec2(player.pos.x + PLAYER_WIDTH / 2.0, player.pos.y),
                     vel: vec2(0.0, -BULLET_SPEED),
                     alive: true,
                 });
-            
-            
-            } if is_key_down(KeyCode::Down)
-                && { is_key_down(KeyCode::Left) || is_key_down(KeyCode::Right) }
-            
-                {
-
+            }
+            if is_key_down(KeyCode::Down) && {
+                is_key_down(KeyCode::Left) || is_key_down(KeyCode::Right)
+            } {
                 bullets.push(Bullet {
                     pos: vec2(
-                        player.pos.x + PLAYER_WIDTH / 2.0  + dir * 18.0,
+                        player.pos.x + PLAYER_WIDTH / 2.0 + dir * 18.0,
                         player.pos.y + PLAYER_HEIGHT / 2.0,
                     ),
                     vel: vec2(dir * BULLET_SPEED, BULLET_SPEED),
                     alive: true,
                 });
-
-
-            } else if is_key_down(KeyCode::Down) || is_key_down(KeyCode::S)  {
-                
+            } else if is_key_down(KeyCode::Down) || is_key_down(KeyCode::S) {
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0,
@@ -545,8 +641,7 @@ async fn main() {
                 });
 
             // We're not moving right or left
-            } else if ! is_key_down(KeyCode::Up) {
-                 
+            } else if !is_key_down(KeyCode::Up) {
                 bullets.push(Bullet {
                     pos: vec2(
                         player.pos.x + PLAYER_WIDTH / 2.0 + dir * 18.0,
@@ -556,7 +651,7 @@ async fn main() {
                     alive: true,
                 });
             }
-            shoot_cooldown = 0.2;      // edited
+            shoot_cooldown = 0.2; // edited
         }
 
         for bullet in &mut bullets {
@@ -570,12 +665,16 @@ async fn main() {
 
         // Bullet-enemy collision
         for bullet in &mut bullets {
-            if !bullet.alive { continue; }
+            if !bullet.alive {
+                continue;
+            }
             for enemy in &mut enemies {
                 if enemy.alive && bullet.rect().overlaps(&enemy.rect()) {
                     enemy.alive = false;
                     bullet.alive = false;
-                    if player.alive { player.score += 100; }
+                    if player.alive {
+                        player.score += 100;
+                    }
                 }
             }
         }
@@ -584,14 +683,17 @@ async fn main() {
         if player.alive && !game_won {
             let mut jumped_on_any = false;
             for enemy in &mut enemies {
-                if !enemy.alive { continue; }
+                if !enemy.alive {
+                    continue;
+                }
                 let player_rect = player.rect();
                 let enemy_rect = enemy.rect();
                 let is_colliding = player_rect.overlaps(&enemy_rect);
 
                 // Jump on enemy from above
                 let player_was_above = player.prev_y + PLAYER_HEIGHT <= enemy.pos.y + 4.0; // fudge factor
-                if enemy.can_be_jumped_on && is_colliding && player.vel.y > 0.0 && player_was_above {
+                if enemy.can_be_jumped_on && is_colliding && player.vel.y > 0.0 && player_was_above
+                {
                     enemy.alive = false;
                     player.vel.y = -JUMP_SPEED * KILL_BOUNCE; // bounce up
                     player.score += 150;
@@ -637,7 +739,8 @@ async fn main() {
                         PowerUpType::Invincibility => {
                             player.invincible_timer = 5.0;
                         }
-                        PowerUpType::HighJump => { // NEW
+                        PowerUpType::HighJump => {
+                            // NEW
                             player.high_jump_timer = 5.0;
                         }
                     }
@@ -666,9 +769,27 @@ async fn main() {
         clear_background(LIGHTGRAY);
 
         if game_won {
-            draw_text("YOU WIN!", screen_width()/2.0-90.0, screen_height()/2.0, 56.0, DARKGREEN);
-            draw_text(&format!("Final Score: {}", player.score), screen_width()/2.0-120.0, screen_height()/2.0+60.0, 40.0, BLACK);
-            draw_text("Press R to Restart", screen_width()/2.0-110.0, screen_height()/2.0+120.0, 32.0, BLACK);
+            draw_text(
+                "YOU WIN!",
+                screen_width() / 2.0 - 90.0,
+                screen_height() / 2.0,
+                56.0,
+                DARKGREEN,
+            );
+            draw_text(
+                &format!("Final Score: {}", player.score),
+                screen_width() / 2.0 - 120.0,
+                screen_height() / 2.0 + 60.0,
+                40.0,
+                BLACK,
+            );
+            draw_text(
+                "Press R to Restart",
+                screen_width() / 2.0 - 110.0,
+                screen_height() / 2.0 + 120.0,
+                32.0,
+                BLACK,
+            );
             if is_key_pressed(KeyCode::R) {
                 game_won = false;
                 current_level = 0;
@@ -696,7 +817,13 @@ async fn main() {
         }
 
         for platform in platforms {
-            draw_rectangle(platform.x - camera_x, platform.y, platform.w, platform.h, DARKGREEN);
+            draw_rectangle(
+                platform.x - camera_x,
+                platform.y,
+                platform.w,
+                platform.h,
+                DARKGREEN,
+            );
         }
         for enemy in &enemies {
             enemy.draw(camera_x);
@@ -716,12 +843,17 @@ async fn main() {
         draw_text(&health_str, 10.0, 30.0, 30.0, RED);
         let score_str = format!("Score: {}", player.score);
         draw_text(&score_str, 10.0, 65.0, 30.0, BLACK);
-        draw_text("Arrow = move, Ctrl = run/shoot, Alt = jump, Esc = quit", 10.0, 100.0, 24.0, BLACK);
-        
+        draw_text(
+            "Arrow = move, Ctrl = run/shoot, Alt = jump, Esc = quit",
+            10.0,
+            100.0,
+            24.0,
+            BLACK,
+        );
+
         let position = format!("player.pos: {:?} camera_x: {:?}", player.pos, camera_x);
         draw_text(position.as_str(), 400.0, 20.0, 24.0, BLACK);
 
-        
         if player.speed_timer > 0.0 {
             draw_text("SPEED!", 10.0, 130.0, 28.0, ORANGE);
         }
@@ -733,8 +865,20 @@ async fn main() {
         }
 
         if !player.alive {
-            draw_text("GAME OVER", screen_width()/2.0 - 100.0, screen_height()/2.0, 48.0, RED);
-            draw_text("Press R to Restart", screen_width()/2.0 - 110.0, screen_height()/2.0 + 50.0, 32.0, BLACK);
+            draw_text(
+                "GAME OVER",
+                screen_width() / 2.0 - 100.0,
+                screen_height() / 2.0,
+                48.0,
+                RED,
+            );
+            draw_text(
+                "Press R to Restart",
+                screen_width() / 2.0 - 110.0,
+                screen_height() / 2.0 + 50.0,
+                32.0,
+                BLACK,
+            );
             if is_key_pressed(KeyCode::R) {
                 player = Player {
                     pos: levels[current_level].start,
@@ -760,4 +904,3 @@ async fn main() {
         next_frame().await
     }
 }
-
