@@ -5,7 +5,7 @@
 use macroquad::{miniquad::*, prelude::*};
 
 const GAME_SPEED: f32 = 1.0;
-const PLAYER_WIDTH: f32 = 10.0;
+const PLAYER_WIDTH: f32 = 31.0;
 const PLAYER_HEIGHT: f32 = 50.0;
 const BASE_MOVE_SPEED: f32 = 200.0;
 const RUNNING_SPEED: f32 = 300.0;
@@ -585,7 +585,7 @@ async fn main() {
 
         let camera_x = player.pos.x - screen_width() / 2.0 + PLAYER_WIDTH / 2.0;
 
-        if is_key_down(KeyCode::Escape) {
+        if is_key_down(KeyCode::Escape) || is_key_down(KeyCode::Q) {
             return;
         }
 
@@ -844,7 +844,7 @@ async fn main() {
         let score_str = format!("Score: {}", player.score);
         draw_text(&score_str, 10.0, 65.0, 30.0, BLACK);
         draw_text(
-            "Arrow = move, Ctrl = run/shoot, Alt = jump, Esc = quit",
+            "Arrow = move, Ctrl = run/shoot, Alt = jump, Esc/q = quit",
             10.0,
             100.0,
             24.0,
