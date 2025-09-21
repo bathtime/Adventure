@@ -1,13 +1,12 @@
-// git add .; git commit -m 'Updating'; git checkout main; git push
-// macroquad = "0.4"
+/* git add .; git commit -m 'Updating'; git checkout main; git push
+ macroquad = "0.4"
+ use macroquad::{miniquad::ElapsedQuery, prelude::*}; */
 
-//use macroquad::{miniquad::ElapsedQuery, prelude::*};
 use macroquad::{miniquad::*, prelude::*};
 
 
-
 const GAME_SPEED: f32 = 1.0;
-const PLAYER_WIDTH: f32 = 24.0;
+const PLAYER_WIDTH: f32 = 74.0;
 const PLAYER_HEIGHT: f32 = 50.0;
 const BASE_MOVE_SPEED: f32 = 200.0;
 const RUNNING_SPEED: f32 = 300.0;
@@ -102,6 +101,7 @@ impl Enemy {
         }
         self.pos = new_pos;
     }
+
     fn draw(&self, camera_x: f32) {
         if self.alive {
             let x = self.pos.x - camera_x;
