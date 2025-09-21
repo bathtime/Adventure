@@ -5,7 +5,6 @@
 use macroquad::{miniquad::*, prelude::*};
 
 
-
 const GAME_SPEED: f32 = 1.0;
 const PLAYER_WIDTH: f32 = 34.0;
 const PLAYER_HEIGHT: f32 = 50.0;
