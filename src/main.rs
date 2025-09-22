@@ -11,7 +11,7 @@ use macroquad::{miniquad::*, prelude::*};
 
 
 const GAME_SPEED: f32 = 1.0;
-const PLAYER_WIDTH: f32 = 33.0;
+const PLAYER_WIDTH: f32 = 77.0;
 const PLAYER_HEIGHT: f32 = 50.0;
 const BASE_MOVE_SPEED: f32 = 200.0;
 const RUNNING_SPEED: f32 = 300.0;
