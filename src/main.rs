@@ -1,6 +1,10 @@
 /* git add .; git commit -m 'Updating'; git checkout main; git push
  macroquad = "0.4"
- use macroquad::{miniquad::ElapsedQuery, prelude::*}; */
+ use macroquad::{miniquad::ElapsedQuery, prelude::*}; 
+
+uncommented /home/user/.config/nvim/lua/plugins/user.lua
+
+*/
 
 use macroquad::{miniquad::*, prelude::*};
 
