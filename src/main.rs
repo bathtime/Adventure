@@ -234,6 +234,7 @@ impl Player {
         }
 
         //let move_speed = BASE_MOVE_SPEED * boost + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
+        
         let move_speed = if self.is_running {
             RUNNING_SPEED
         } else {
