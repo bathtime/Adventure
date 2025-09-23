@@ -2,11 +2,13 @@
 
  git add .; git commit -m 'Updating'; git checkout main; git push
  macroquad = "0.4"
- use macroquad::{miniquad::ElapsedQuery, prelude::*}; 
+ use macroquad::{miniquad::ElapsedQuery, prelude::*};
+ use macroquad::{experimental, miniquad::*, prelude::*};
 
 */
 
 use macroquad::{miniquad::*, prelude::*};
+
 
 
 const GAME_SPEED: f32 = 1.0;
@@ -238,7 +240,7 @@ impl Player {
         }
 
         //let move_speed = BASE_MOVE_SPEED * boost + if self.speed_timer > 0.0 { SPEED_BOOST } else { 0.0 };
-        
+
         let move_speed = if self.is_running {
             RUNNING_SPEED
         } else {
